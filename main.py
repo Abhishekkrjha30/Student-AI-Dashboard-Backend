@@ -40,7 +40,6 @@ app.add_middleware(
     allow_origins=origins,   # frontend URLs only
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],  # all methods including preflight
-    allow_methods=["*"],
     allow_headers=["*"],
 )
 
