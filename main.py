@@ -34,9 +34,15 @@ except Exception as e:
 app = FastAPI()
 
 # ================== CORS ==================
+# origins = [
+#     "http://127.0.0.1:5500",
+#     "http://localhost:5500",
+# ]
+
+# Allowed origins
 origins = [
-    "http://127.0.0.1:5500",
-    "http://localhost:5500",
+    "https://student-ai-dashboard-frontend.vercel.app",
+    "http://localhost:3000"  # optional, for local testing
 ]
 
 app.add_middleware(
