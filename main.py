@@ -22,16 +22,12 @@ app.add_middleware(
         "https://student-ai-dashboard-frontend-1fwk2bvvt-abhis-projects-66a94381.vercel.app",
         "http://localhost:3000"
     ],
-    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ✅ Handle preflight requests explicitly (important for Render/Vercel)
-@app.options("/{rest_of_path:path}")
-async def preflight_handler(rest_of_path: str):
-    return {"message": "Preflight OK"}
+
 
 # ================== MONGODB ==================
 MONGO_URL = os.getenv("MONGO_URL")
