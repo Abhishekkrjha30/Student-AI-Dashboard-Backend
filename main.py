@@ -7,16 +7,40 @@ from fastapi.middleware.cors import CORSMiddleware
 from pymongo import MongoClient
 import certifi
 
-# Load ENV
+# ================== LOAD ENV ==================
 load_dotenv()
+
+# ================== FASTAPI ==================
+app = FastAPI()
+
+# ================== CORS (FIXED) ==================
+origins = [
+    "https://student-ai-dashboard-frontend.vercel.app",
+    "http://localhost:3000"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],   # ✅ allow ALL methods (important)
+    allow_headers=["*"],
+)
+
+# ✅ Handle preflight requests explicitly (important for Render/Vercel)
+@app.options("/{rest_of_path:path}")
+async def preflight_handler(rest_of_path: str):
+    return {"message": "Preflight OK"}
 
 # ================== MONGODB ==================
 MONGO_URL = os.getenv("MONGO_URL")
+
 client_db = MongoClient(
     MONGO_URL,
     tls=True,
     tlsCAFile=certifi.where()
 )
+
 db = client_db["student_db"]
 collection = db["students"]
 
@@ -25,23 +49,6 @@ try:
     collection.create_index("id", unique=True)
 except Exception as e:
     print("Index creation / DB error:", e)
-
-# ================== FASTAPI ==================
-app = FastAPI()
-
-# ================== CORS FIX ==================
-origins = [
-    "https://student-ai-dashboard-frontend.vercel.app",
-    "http://localhost:3000"  # local testing
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,   # frontend URLs only
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],  # all methods including preflight
-    allow_headers=["*"],
-)
 
 # ================== GROQ ==================
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
@@ -77,7 +84,10 @@ def create_student(student: Student):
         collection.insert_one(student.dict())
         return {"message": "Student created ✅"}
     except Exception:
-        raise HTTPException(status_code=400, detail="Student with this ID already exists")
+        raise HTTPException(
+            status_code=400,
+            detail="Student with this ID already exists"
+        )
 
 @app.get("/students")
 def get_students():
