@@ -16,7 +16,11 @@ app = FastAPI()
 # ================== CORS (FIXED) ==================
 origins = [
     "https://student-ai-dashboard-frontend.vercel.app",
+    "https://student-ai-dashboard-frontend-git-main-abhis-projects-66a94381.vercel.app",
     "https://student-ai-dashboard-frontend-1fwk2bvvt-abhis-projects-66a94381.vercel.app",
+    "https://student-ai-dashboard-frontend.vercel.app/",
+    "https://student-ai-dashboard-frontend-git-main-abhis-projects-66a94381.vercel.app/",
+    "https://student-ai-dashboard-frontend-1fwk2bvvt-abhis-projects-66a94381.vercel.app/",
     "http://localhost:3000"
 ]
 
